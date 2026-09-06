@@ -10,6 +10,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { ProjectStore } from '../core/project.js';
 import { hasFfmpeg } from '../core/ffmpeg.js';
+import { getGenerationDiagnostics } from '../core/generation.js';
 
 const store = new ProjectStore();
 
@@ -44,7 +45,8 @@ const tools = [
   },
   {
     name: 'yachicut_generate_clip',
-    description: 'Mock-generate clip with ffmpeg and place on timeline',
+    description:
+      'Generate clip via GENERATION_PROVIDER (mock|comfyui|auto) and place on timeline. ComfyUI uses shot description/prompt.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -53,6 +55,7 @@ const tools = [
         durationSec: { type: 'number' },
         label: { type: 'string' },
         color: { type: 'string' },
+        prompt: { type: 'string' },
       },
       required: ['projectId'],
     },
@@ -132,7 +135,7 @@ const tools = [
   },
   {
     name: 'yachicut_doctor',
-    description: 'Check ffmpeg and projects root',
+    description: 'Check ffmpeg, projects root, generation provider, and ComfyUI reachability',
     inputSchema: { type: 'object', properties: {} },
   },
 ] as const;
@@ -190,6 +193,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             durationSec: a.durationSec !== undefined ? Number(a.durationSec) : undefined,
             label: a.label ? String(a.label) : undefined,
             color: a.color ? String(a.color) : undefined,
+            prompt: a.prompt ? String(a.prompt) : undefined,
           }),
         );
       case 'yachicut_place_clip':
@@ -233,7 +237,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'yachicut_export':
         return jsonResult(await store.exportProject(String(a.projectId)));
       case 'yachicut_doctor':
-        return jsonResult({ ffmpeg: hasFfmpeg(), projectsRoot: store.projectsRoot });
+        return jsonResult({
+          ffmpeg: hasFfmpeg(),
+          projectsRoot: store.projectsRoot,
+          generation: await getGenerationDiagnostics(),
+        });
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
