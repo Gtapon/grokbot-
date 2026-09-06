@@ -96,4 +96,7 @@ export interface GenerateClipOptions {
   label?: string;
   color?: string;
   withTone?: boolean;
+  /** Prompt for AI generation providers (ComfyUI). Defaults to shot description/title. */
+  prompt?: string;
+  negativePrompt?: string;
 }
