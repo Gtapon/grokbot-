@@ -250,6 +250,11 @@ export class ProjectStore {
 
     const duration = opts.durationSec ?? shot?.durationSec ?? 3;
     const label = opts.label ?? shot?.title ?? 'clip';
+    const prompt =
+      opts.prompt ??
+      shot?.description ??
+      shot?.title ??
+      label;
     const colors = ['blue', 'red', 'green', 'purple', 'orange', 'teal'];
     const color =
       opts.color ?? colors[(shot?.index ?? project.assets.length) % colors.length];
@@ -267,8 +272,10 @@ export class ProjectStore {
       height: project.meta.height,
       fps: project.meta.fps,
       color,
-      withTone: true,
+      withTone: opts.withTone !== false,
       label,
+      prompt,
+      negativePrompt: opts.negativePrompt,
     });
 
     const asset: MediaAsset = {
