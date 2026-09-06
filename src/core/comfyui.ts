@@ -368,7 +368,7 @@ export class ComfyUIGenerationProvider implements GenerationProvider {
       '-pix_fmt',
       'yuv420p',
       '-vf',
-      `scale=${opts.width}:${opts.height}:force_original_aspect_ratio.decrease,pad=${opts.width}:${opts.height}:(ow-iw)/2:(oh-ih)/2`,
+      `scale=${opts.width}:${opts.height}:force_original_aspect_ratio=decrease,pad=${opts.width}:${opts.height}:(ow-iw)/2:(oh-ih)/2`,
       '-r',
       String(opts.fps),
       outPath,
