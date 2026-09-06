@@ -1,0 +1,114 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel2: #1e2330;
+  --border: #2a3142;
+  --text: #e8ecf4;
+  --muted: #9aa3b5;
+  --accent: #6c8cff;
+  --good: #3dd68c;
+  --bad: #ff6b7a;
+  --warn: #f5c542;
+  --radius: 10px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; background: var(--bg); color: var(--text); }
+
+button, input, select {
+  font: inherit;
+  color: inherit;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+}
+button { cursor: pointer; }
+button.primary { background: var(--accent); border-color: transparent; color: #0b1020; font-weight: 600; }
+button.good { background: #1a3a2a; border-color: #2f6b4a; color: var(--good); }
+button.bad { background: #3a1a22; border-color: #6b2f3a; color: var(--bad); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+.topbar {
+  display: flex; gap: 1rem; align-items: center; justify-content: space-between;
+  padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); background: var(--panel);
+}
+.brand { font-weight: 700; letter-spacing: 0.02em; }
+.brand span { color: var(--accent); }
+.row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.muted { color: var(--muted); font-size: 0.9rem; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 0;
+  min-height: 0;
+}
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+}
+
+.panel {
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 0.75rem;
+  overflow: auto;
+  min-height: 0;
+}
+.panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+.panel h2 { margin: 0 0 0.75rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+
+.card {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.65rem;
+  margin-bottom: 0.5rem;
+}
+.card.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.card .title { font-weight: 600; margin-bottom: 0.25rem; }
+.badge {
+  display: inline-block; font-size: 0.72rem; padding: 0.1rem 0.4rem; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--muted);
+}
+.badge.accepted { color: var(--good); border-color: #2f6b4a; }
+.badge.rejected { color: var(--bad); border-color: #6b2f3a; }
+.badge.pending { color: var(--warn); border-color: #6b5a2f; }
+.badge.missing { color: var(--bad); }
+
+.progress {
+  height: 8px; background: #0b0d12; border-radius: 999px; overflow: hidden; margin: 0.5rem 0;
+}
+.progress > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--good)); }
+
+.timeline {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.track {
+  background: #0b0d12; border: 1px solid var(--border); border-radius: 8px; padding: 0.4rem;
+}
+.track-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem; }
+.clips {
+  display: flex; gap: 4px; min-height: 42px; align-items: stretch; overflow-x: auto;
+}
+.clip {
+  min-width: 80px; flex: 0 0 auto; padding: 0.35rem 0.5rem;
+  background: #243056; border-radius: 6px; border: 1px solid #3a4d86;
+  font-size: 0.8rem; cursor: pointer;
+}
+.clip.selected { outline: 2px solid var(--accent); }
+.clip.rejected { opacity: 0.45; background: #3a1a22; }
+
+.preview {
+  aspect-ratio: 16/9; background: #000; border-radius: var(--radius);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  overflow: hidden; margin-bottom: 0.75rem;
+}
+.preview video { width: 100%; height: 100%; object-fit: contain; }
+.preview .empty { color: var(--muted); }
+
+.hash { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.72rem; color: var(--muted); word-break: break-all; }
+.error { color: var(--bad); font-size: 0.85rem; margin-top: 0.5rem; }
