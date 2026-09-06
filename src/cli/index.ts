@@ -2,6 +2,11 @@
 import { Command } from 'commander';
 import { ProjectStore } from '../core/project.js';
 import { hasFfmpeg } from '../core/ffmpeg.js';
+import {
+  getGenerationDiagnostics,
+  getGenerationProvider,
+  resolveProviderKind,
+} from '../core/generation.js';
 
 const store = new ProjectStore();
 const program = new Command();
@@ -32,7 +37,7 @@ program
   .description('Add a storyboard shot')
   .requiredOption('-p, --project <id>', 'project id')
   .requiredOption('-t, --title <title>', 'shot title')
-  .option('-d, --description <text>', 'description')
+  .option('-d, --description <text>', 'description (also used as ComfyUI prompt)')
   .option('--duration <sec>', 'duration seconds', '3')
   .action((opts) => {
     const shot = store.addShot(opts.project, {
@@ -45,20 +50,38 @@ program
 
 program
   .command('generate-clip')
-  .description('Mock-generate a clip (ffmpeg) and place on timeline')
+  .description(
+    'Generate a clip via the active generation provider and place it on the timeline. ' +
+      'Provider is selected with GENERATION_PROVIDER=mock|comfyui|auto (default: mock). ' +
+      'Mock uses ffmpeg color bars; comfyui talks to COMFYUI_URL (default http://127.0.0.1:8188) ' +
+      'using workflows/comfyui-default.json; auto tries ComfyUI then falls back to mock. ' +
+      'Shot description/title (or --prompt) is sent as the ComfyUI text prompt.',
+  )
   .requiredOption('-p, --project <id>', 'project id')
   .option('-s, --shot <id>', 'link to shot id')
   .option('--duration <sec>', 'duration override')
   .option('--label <label>', 'label')
-  .option('--color <color>', 'ffmpeg color name')
+  .option('--color <color>', 'ffmpeg color name (mock provider)')
+  .option('--prompt <text>', 'generation prompt (ComfyUI; defaults to shot description/title)')
   .action(async (opts) => {
     const result = await store.generateClip(opts.project, {
       shotId: opts.shot,
       durationSec: opts.duration ? Number(opts.duration) : undefined,
       label: opts.label,
       color: opts.color,
+      prompt: opts.prompt,
     });
-    console.log(JSON.stringify(result, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          provider: getGenerationProvider().name,
+          providerKind: resolveProviderKind(),
+          ...result,
+        },
+        null,
+        2,
+      ),
+    );
   });
 
 program
@@ -148,9 +171,20 @@ program
 
 program
   .command('doctor')
-  .description('Check environment')
-  .action(() => {
-    console.log(JSON.stringify({ ffmpeg: hasFfmpeg(), projectsRoot: store.projectsRoot }, null, 2));
+  .description('Check environment (ffmpeg, generation provider, ComfyUI reachability)')
+  .action(async () => {
+    const gen = await getGenerationDiagnostics();
+    console.log(
+      JSON.stringify(
+        {
+          ffmpeg: hasFfmpeg(),
+          projectsRoot: store.projectsRoot,
+          generation: gen,
+        },
+        null,
+        2,
+      ),
+    );
   });
 
 program.parseAsync(process.argv).catch((err) => {
