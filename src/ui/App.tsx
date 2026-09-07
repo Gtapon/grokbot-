@@ -87,10 +87,11 @@ export function App() {
 
   const previewAsset = useMemo(() => {
     if (!project) return null;
-    const mediaId = selectedClip?.mediaId || selectedShot?.mediaId;
+    // Prefer explicit media selection, else clip, else shot
+    const mediaId = selectedMediaId || selectedClip?.mediaId || selectedShot?.mediaId;
     if (!mediaId) return null;
     return project.assets.find((a) => a.id === mediaId) ?? null;
-  }, [project, selectedClip, selectedShot]);
+  }, [project, selectedMediaId, selectedClip, selectedShot]);
 
   async function wrap(fn: () => Promise<void>, ok?: string) {
     setBusy(true); setError(null);
@@ -129,7 +130,11 @@ export function App() {
   } else {
     const shots = project.storyboard.map((s) => el("div", {
       key: s.id, className: "card shot-card " + (selectedShotId === s.id ? "active" : ""),
-      onClick: () => { setSelectedShotId(s.id); if (s.clipId) setSelectedClipId(s.clipId); },
+      onClick: () => {
+        setSelectedShotId(s.id);
+        if (s.clipId) setSelectedClipId(s.clipId);
+        setSelectedMediaId(null);
+      },
     },
       el("div", { className: "title" }, "#" + (s.index + 1) + " " + s.title),
       el("div", { className: "row" },
@@ -188,7 +193,12 @@ export function App() {
                     await loadProject(projectId);
                   });
                 },
-                onClick: () => setSelectedClipId(c.id),
+                onClick: () => {
+                  setSelectedClipId(c.id);
+                  setSelectedMediaId(null);
+                  const linked = project.storyboard.find((s) => s.clipId === c.id);
+                  if (linked) setSelectedShotId(linked.id);
+                },
               }, c.label || c.id.slice(0, 8), el("div", { className: "muted" }, c.startSec.toFixed(1) + "s")),
             )),
           )),
@@ -200,7 +210,7 @@ export function App() {
           projectId, assets: project.assets, selectedClip, selectedMediaId,
           onSelectMedia: setSelectedMediaId,
           reload: async () => { await loadProject(projectId); },
-          api, busy, setToast, setError,
+          api, busy, setBusy, setToast, setError,
         }),
         el("div", { className: "panel-head", style: { marginTop: "1rem" } }, el("h2", null, "Decision log")),
         ...[...project.decisions].reverse().slice(0, 12).map((d) => el("div", { key: d.id, className: "card" },
