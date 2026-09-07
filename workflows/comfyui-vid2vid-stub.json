@@ -1,0 +1,30 @@
+{
+  "_yachicut": {
+    "description": "STUB for generate-from-media (img2vid / vid2vid). Replace with a ComfyUI API-format workflow that loads an input image/video. Set supportsMediaInput to true when ready.",
+    "supportsMediaInput": false,
+    "mode": "vid2vid",
+    "mediaNodeId": "LOAD_MEDIA",
+    "mediaInput": "video",
+    "promptNodeId": "6",
+    "promptInput": "text",
+    "notes": [
+      "Build img2vid/vid2vid in ComfyUI, Save API Format, set supportsMediaInput true",
+      "Until then AI-edit links+places footage and logs generation skipped"
+    ]
+  },
+  "LOAD_MEDIA": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "{{MEDIA_FILENAME}}" },
+    "_meta": { "title": "Load input — REPLACE" }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": { "text": "{{PROMPT}}", "clip": ["4", 1] },
+    "_meta": { "title": "Prompt" }
+  },
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": { "ckpt_name": "CHANGE_ME.safetensors" },
+    "_meta": { "title": "Checkpoint" }
+  }
+}
