@@ -125,3 +125,105 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   border-color: var(--accent);
   background: #151b2c;
 }
+.dropzone.disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+.dropzone-title {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+/* Toast / banners */
+.toast {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 50;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.65rem 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.error-banner {
+  background: #3a1a22;
+  border-bottom: 1px solid #6b2f3a;
+  color: var(--bad);
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Empty / start screen */
+.empty-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 2rem;
+}
+.empty-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+  padding: 1.75rem 2rem;
+  max-width: 420px;
+  text-align: center;
+}
+.empty-card h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+/* Panel chrome */
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.panel-head h2 { margin: 0; }
+.panel-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Storyboard / shots */
+.shot-card { cursor: pointer; }
+.shot-card:hover { border-color: #3a4560; }
+.add-shot-row { margin-bottom: 0.65rem; }
+
+/* Preview empty state */
+.preview-empty {
+  color: var(--muted);
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Media bridge / trim */
+.media-bridge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.trim-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.trim-panel label input {
+  width: 4.5rem;
+  padding: 0.35rem 0.45rem;
+}
+.import-status {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+}
