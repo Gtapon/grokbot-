@@ -12,7 +12,7 @@ const store = new ProjectStore();
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: '100mb' }));
+app.use(express.json({ limit: '512mb' }));
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, ffmpeg: hasFfmpeg(), ffprobe: hasFfprobe() });
