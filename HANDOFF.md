@@ -107,7 +107,7 @@ yachicut-mvp/
         └── main.tsx
 ```
 
-**Data model (high level):** Project → storyboard shots, tracks/clips, media assets (content hash), decisions, export under `projects/\u003cid\u003e/`.
+**Data model (high level):** Project → storyboard shots, tracks/clips, media assets (content hash), decisions, export under `projects/<id>/`.
 
 **Generation env:**
 
@@ -209,11 +209,11 @@ npm run start        # API :8787
 npm run dev          # UI  :5173
 npm run cli -- doctor
 npm run cli -- create MyCut
-npm run cli -- import-media -p \u003cID\u003e -f ./clip.mp4
-npm run cli -- ai-edit -p \u003cID\u003e -m \u003cMEDIA\u003e --prompt "golden hour"
-npm run cli -- update-clip -p \u003cID\u003e -c \u003cCLIP\u003e --in 0.5 --out 2.5 --start 0
-npm run cli -- move-clip -p \u003cID\u003e -c \u003cCLIP\u003e --dir up
-npm run cli -- export -p \u003cID\u003e
+npm run cli -- import-media -p <ID> -f ./clip.mp4
+npm run cli -- ai-edit -p <ID> -m <MEDIA> --prompt "golden hour"
+npm run cli -- update-clip -p <ID> -c <CLIP> --in 0.5 --out 2.5 --start 0
+npm run cli -- move-clip -p <ID> -c <CLIP> --dir up
+npm run cli -- export -p <ID>
 npm run demo
 npm run mcp          # stdio MCP
 npm run typecheck
@@ -300,7 +300,7 @@ Handoff etiquette: 実装 lands code → 参謀 verifies against goals/E2E → �
 
 - Already owned in this engagement: UI polish **PR #1**, Comfy E2E on CPU, **PR #2** diff review, UI patch **PR #3** (preview sync / styles / busy).
 - Shipping path: **GitHub MCP**, prefer **branch → PR** (avoid direct push to `main` when collaborating).
-- Local trees: `/workspace/yachicut-mvp` and PC `C:\\Users\\mitiy\\yachicut-mvp-pc`.
+- Local trees: `/workspace/yachicut-mvp` and PC `C:\Users\mitiy\yachicut-mvp-pc`.
 - Generation on CPU: **1280×720 is too heavy**; **512 + low steps** is the proven path.
 - Easy unfinished items: **trim scrub sync**, restore **missing-media badges** / other PR#1 polish that regressed, **NLE export** strengthening.
 
