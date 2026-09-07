@@ -61,20 +61,23 @@ export function MediaBridge(props: MediaBridgeProps) {
     const list = Array.from(files);
     await runBusy("Importing…", async () => {
       for (const file of list) {
-        const buf = await file.arrayBuffer();
-        const bytes = new Uint8Array(buf);
-        let binary = "";
-        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!);
-        const contentBase64 = btoa(binary);
-        await api("/api/projects/" + projectId + "/import-media-upload", {
+        const form = new FormData();
+        form.append("file", file, file.name);
+        form.append("label", file.name);
+        // Do not set Content-Type — browser sets multipart boundary.
+        const res = await fetch("/api/projects/" + projectId + "/import-media-upload", {
           method: "POST",
-          body: JSON.stringify({ filename: file.name, contentBase64, label: file.name }),
+          body: form,
         });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error((data as { error?: string }).error || res.statusText || "Upload failed");
+        }
       }
       await reload();
       setToast("Imported " + list.length + " file(s)");
     });
-  }, [api, projectId, reload, runBusy, setToast]);
+  }, [projectId, reload, runBusy, setToast]);
 
   const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (busy) return;

@@ -71,6 +71,8 @@ The provider:
 
 CLI import-media update-clip move-clip ai-edit suggest-edit. UI drag-drop trim AI button. ComfyUI when supportsMediaInput.
 
+Large media files: prefer the UI drag-drop / file picker (multipart upload) or CLI `import-media -f path`. Avoid JSON base64 upload for big videos (base64 inflates ~33%).
+
 ## CLI
 
 ```bash
