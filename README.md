@@ -17,6 +17,9 @@ npm install
 - Web UI, CLI, MCP
 - Pluggable generation: **mock** (ffmpeg) / **ComfyUI** / **auto**
 - Export JSON + concatenated timeline
+- **Import user videos** (import-media / drag-drop / upload) with hash + ffprobe
+- **Manual trim & reorder** on timeline clips (update-clip / move-clip)
+- **AI edit with footage** (ai-edit / UI button) link+place+decision log; ComfyUI when workflow supports it
 
 ## Generation providers
 
@@ -63,6 +66,10 @@ The provider:
 - Polls `GET /history/{prompt_id}` until done or timeout
 - Downloads via `GET /view?...` into the project media store
 - Converts still images to a short MP4 (via ffmpeg) so clips stay timeline-friendly
+
+## Import / trim / AI
+
+CLI import-media update-clip move-clip ai-edit suggest-edit. UI drag-drop trim AI button. ComfyUI when supportsMediaInput.
 
 ## CLI
 

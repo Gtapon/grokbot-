@@ -11,6 +11,7 @@ import {
 import { ProjectStore } from '../core/project.js';
 import { hasFfmpeg } from '../core/ffmpeg.js';
 import { getGenerationDiagnostics } from '../core/generation.js';
+import { handleMediaTool, mediaToolDefs } from './media-tools.js';
 
 const store = new ProjectStore();
 
@@ -138,6 +139,7 @@ const tools = [
     description: 'Check ffmpeg, projects root, generation provider, and ComfyUI reachability',
     inputSchema: { type: 'object', properties: {} },
   },
+  ...mediaToolDefs,
 ] as const;
 
 function jsonResult(data: unknown) {
@@ -171,6 +173,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
   const a = (args ?? {}) as Record<string, unknown>;
   try {
+    const media = await handleMediaTool(store, name, a);
+    if (media !== null) return jsonResult(media);
+
     switch (name) {
       case 'yachicut_create_project': {
         const p = store.createProject(String(a.name));
