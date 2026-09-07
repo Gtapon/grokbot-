@@ -3,18 +3,19 @@ import cors from 'cors';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
 import { ProjectStore } from '../core/project.js';
-import { hasFfmpeg } from '../core/ffmpeg.js';
+import { hasFfmpeg, hasFfprobe } from '../core/ffmpeg.js';
 import { REPO_ROOT } from '../core/paths.js';
+import { installMediaRoutes } from './media-routes.js';
 
 const PORT = Number(process.env.PORT || 8787);
 const store = new ProjectStore();
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ limit: '100mb' }));
 
 app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, ffmpeg: hasFfmpeg() });
+  res.json({ ok: true, ffmpeg: hasFfmpeg(), ffprobe: hasFfprobe() });
 });
 
 app.get('/api/projects', (_req, res) => {
@@ -67,6 +68,7 @@ app.post('/api/projects/:id/generate-clip', async (req, res) => {
       durationSec: req.body?.durationSec,
       label: req.body?.label,
       color: req.body?.color,
+      prompt: req.body?.prompt,
     });
     res.status(201).json(result);
   } catch (e) {
@@ -82,6 +84,8 @@ app.post('/api/projects/:id/place-clip', (req, res) => {
     res.status(400).json({ error: e instanceof Error ? e.message : String(e) });
   }
 });
+
+installMediaRoutes(app, store);
 
 app.post('/api/projects/:id/decide', (req, res) => {
   try {
@@ -129,5 +133,7 @@ if (existsSync(uiDir)) {
 }
 
 app.listen(PORT, '127.0.0.1', () => {
-  console.log(`YachiCut API http://127.0.0.1:${PORT} (ffmpeg=${hasFfmpeg()})`);
+  console.log(
+    `YachiCut API http://127.0.0.1:${PORT} (ffmpeg=${hasFfmpeg()} ffprobe=${hasFfprobe()})`,
+  );
 });
