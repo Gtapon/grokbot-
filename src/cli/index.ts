@@ -135,7 +135,7 @@ program
   .option('--note <text>', 'note')
   .action((opts) => {
     if (opts.shot) {
-      console.log(JSON.stringify(store.decideClip(opts.project, opts.shot, 'rejected', opts.note), null, 2));
+      console.log(JSON.stringify(store.decideShot(opts.project, opts.shot, 'rejected', opts.note), null, 2));
     } else if (opts.clip) {
       console.log(JSON.stringify(store.decideClip(opts.project, opts.clip, 'rejected', opts.note), null, 2));
     } else {
